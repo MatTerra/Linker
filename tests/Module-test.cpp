@@ -5,7 +5,7 @@
 #include <Module.h>
 #include <string>
 
-std::string baseHeaders = "H: test\nH: 4\nH: 0100";
+std::string baseHeaders = "H: test\nH: 4\nH: 0100\n";
 std::string textSection = "T: 13 3 14 5"
 
 TEST(Module, mayInstantiateModule){
