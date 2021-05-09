@@ -14,9 +14,7 @@ class UseTable {
 
 public:
     void addSymbol(std::string symbol, std::vector<uint16_t> useAddresses);
-
     std::vector<uint16_t> getSymbolUses(std::string symbol);
-
     void applyOffset(uint16_t offset);
 
 private:
