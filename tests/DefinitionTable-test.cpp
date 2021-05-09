@@ -21,5 +21,4 @@ TEST(DefinitionTable, mayApplyOffset){
     definitionTable.addSymbol("test", 1);
     definitionTable.applyOffset(2);
     ASSERT_EQ(3, definitionTable.getSymbolAddress("test"));
-
 }

@@ -5,6 +5,7 @@
 #define STRING_UTILS_H
 
 #include <string>
+#include <vector>
 #include <algorithm>
 #include <fstream>
 
@@ -28,21 +29,31 @@ static void lowerCaseString(std::string &string) {
                    [](unsigned char c){ return tolower(c); });
 }
 
-std::string readFile(std::string filename) {
+static std::string readFile(std::string filename) {
     std::ifstream t(filename);
     return std::string ((std::istreambuf_iterator<char>(t)),
                         std::istreambuf_iterator<char>());
 }
 
-unsigned long getLineEnd(std::string content, size_t initPos)  {
+static unsigned long getLineEnd(std::string content, size_t initPos)  {
     return content.find_first_of('\n', initPos);
 }
 
-unsigned long getLineLength(std::string &content, size_t initPos) {
+static unsigned long getLineLength(std::string &content, size_t initPos) {
     return getLineEnd(content, initPos) - initPos;
 }
 
-std::string getLine(std::string content, size_t initPos)  {
+static std::string getLine(std::string content, size_t initPos)  {
     return content.substr(initPos, getLineLength(content, initPos));
+}
+
+static std::vector<std::string> getLines(std::string content){
+    std::vector<std::string> lines;
+    size_t pos = 0;
+    while (pos != std::string::npos){
+        lines.insert(lines.end(), getLine(content, pos+1));
+        pos = getLineEnd(content, pos+1);
+    }
+    return lines;
 }
 #endif
