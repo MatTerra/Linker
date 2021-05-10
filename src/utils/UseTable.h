@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <set>
 #include <unordered_map>
 
 
@@ -17,8 +18,13 @@ public:
     std::vector<uint16_t> getSymbolUses(std::string symbol);
     void applyOffset(uint16_t offset);
 
+    std::vector<std::string> getSymbols();
+
+    void merge(UseTable table);
+
 private:
     std::unordered_map<std::string, std::vector<uint16_t>> useTable;
+    std::set<std::string> symbols;
 };
 
 
