@@ -35,6 +35,23 @@ You may copy it to the folder you would like to use and run it as following. The
 ./ligador <o_files>
 ```
 
+## Implementation Details
+
+The assembly language expects the `PUBLIC` and `EXTERN` directives to be used in the `TEXT` section only.
+This linker operates on files with the following format
+
+```asm
+H: main
+H: 6
+H: 010100
+H: U externSymbol 1 3
+H: D publicSymbol 5
+T: 01 00 13 00 14 05
+```
+
+There may be as many use table lines and definition table lines as there are public and extern directives.
+First the source code of all the modules is concatenated and the offsets are applied. Then, the use table is resolved.
+
 ## Running Unit Tests
 
 The project was developed through an TDD approach, thus, it contains a thorough test suite, which is built with the executable. To run it, access the tests folder in the build dir and run the following command:
