@@ -2,21 +2,29 @@
 // Created by mateusberardo on 09/05/2021.
 //
 
+#include <vector>
 #include "DefinitionTable.h"
 
 void DefinitionTable::addSymbol(std::string symbol, uint16_t address) {
     // TODO symbol already defined
+    symbols.insert(symbols.end(), symbol);
     definitionTable.emplace(symbol, address);
 }
 
 uint16_t DefinitionTable::getSymbolAddress(std::string symbol) {
-    // TODO symbol not found
     return definitionTable[symbol];
 }
 
 void DefinitionTable::applyOffset(uint16_t offset) {
-    for (auto symbol : definitionTable){
-        auto useVector = &definitionTable[symbol.first];
-        *useVector+=offset;
-    }
+    for (const auto& symbol : getSymbols())
+        definitionTable[symbol]+=offset;
+}
+
+std::vector<std::string> DefinitionTable::getSymbols() {
+    return std::vector<std::string>(symbols.begin(), symbols.end());
+}
+
+void DefinitionTable::merge(DefinitionTable table) {
+    for (const auto& symbol : table.getSymbols())
+        addSymbol(symbol, table.getSymbolAddress(symbol));
 }

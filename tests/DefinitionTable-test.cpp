@@ -3,6 +3,7 @@
 //
 #include "gtest/gtest.h"
 #include <DefinitionTable.h>
+#include <linkingerrors/UndefinedSymbolException.h>
 
 
 TEST(DefinitionTable, mayInstantiateDefinitionTable){
@@ -21,4 +22,30 @@ TEST(DefinitionTable, mayApplyOffset){
     definitionTable.addSymbol("test", 1);
     definitionTable.applyOffset(2);
     ASSERT_EQ(3, definitionTable.getSymbolAddress("test"));
+}
+
+TEST(DefinitionTable, mayGetSymbols){
+    DefinitionTable definitionTable;
+    definitionTable.addSymbol("test", 1);
+    definitionTable.addSymbol("test2", 3);
+    ASSERT_EQ((std::vector<std::string>{"test", "test2"}),
+              definitionTable.getSymbols());
+}
+
+TEST(DefinitionTable, mayMergeTable){
+    DefinitionTable definitionTable;
+    definitionTable.addSymbol("test", 1);
+
+    DefinitionTable definitionTable2;
+    definitionTable2.addSymbol("test1", 2);
+
+    definitionTable.merge(definitionTable2);
+    ASSERT_EQ(1, definitionTable.getSymbolAddress("test"));
+    ASSERT_EQ(2, definitionTable.getSymbolAddress("test1"));
+}
+
+TEST(DefinitionTable, getUndefinedSymbolShouldThrow){
+    DefinitionTable definitionTable;
+    ASSERT_THROW(definitionTable.getSymbolAddress("test"),
+                 UndefinedSymbolException);
 }

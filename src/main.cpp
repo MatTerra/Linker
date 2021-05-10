@@ -33,12 +33,14 @@ int main(int argc, char **argv){
     auto programName = modules[0].getModuleName();
     
     std::vector<uint16_t> fullCode;
+    UseTable fullUseTable;
     uint16_t nowOffset = 0;
     for (auto module : modules){
         module.applyOffset(nowOffset);
         auto moduleCode = module.getModuleCode();
         fullCode.insert(fullCode.end(),
                         moduleCode.begin(), moduleCode.end());
+        fullUseTable.merge(module.getUseTable());
         nowOffset += module.getModuleSize();
     }
 
