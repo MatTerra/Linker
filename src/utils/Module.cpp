@@ -21,19 +21,38 @@ Module::Module(std::string moduleContent) {
 
             line = extractLineContent(line);
 
-            if (line[0] == 'D') {
-                line = line.substr(1);
-                trim(line);
-                unsigned long space = line.find(' ');
-                std::string symbol = line.substr(0, space);
-                trim(symbol);
-                std::string sAddr = line.substr(space);
-                trim(sAddr);
-                uint16_t addr = std::stoi(sAddr);
-                definitionTable.addSymbol(symbol, addr);
+            char type = line[0];
+
+            line = line.substr(2);
+            trim(line);
+
+            if (type == 'D')
+                addDefinitionTableEntry(line);
+            else if (type == 'U'){
+                addUseTableEntry(line);
+
             }
         }
     }
+}
+
+void Module::addUseTableEntry(const std::string &line) {
+    std::string symbol = line.substr(0, line.find(' '));
+    std::string uses = line.substr(symbol.size() + 1);
+
+    trim(symbol);
+    trim(uses);
+
+    useTable.addSymbol(symbol, getNumberVector(uses));
+}
+
+void Module::addDefinitionTableEntry(const std::string &line) {
+    std::string symbol = line.substr(0, line.find(' '));
+    std::string addr = line.substr(symbol.size() + 1);
+
+    trim(symbol);
+    trim(addr);
+    definitionTable.addSymbol(symbol, std::stoi(addr));
 }
 
 void Module::extractModuleSize() {
@@ -96,4 +115,21 @@ std::vector<uint16_t> Module::getModuleCode() {
 
 DefinitionTable Module::getDefinitionTable() {
     return definitionTable;
+}
+
+UseTable Module::getUseTable() {
+    return useTable;
+}
+
+void Module::applyOffset(int offset) {
+    useTable.applyOffset(offset);
+    definitionTable.applyOffset(offset);
+    relocateCode(offset);
+}
+
+void Module::relocateCode(int offset) {
+    uint64_t codePosition;
+    for (codePosition=0; codePosition < moduleCode.size(); codePosition++)
+        if(relocationMap[codePosition] == '1')
+            moduleCode[codePosition]+=offset;
 }
