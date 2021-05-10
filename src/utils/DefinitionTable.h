@@ -6,8 +6,11 @@
 #define LIGADOR_DEFINITIONTABLE_H
 
 #include <string>
+#include <vector>
 #include <set>
 #include <unordered_map>
+#include "linkingerrors/UndefinedSymbolException.h"
+#include "linkingerrors/RedefinedSymbolException.h"
 
 
 class DefinitionTable {

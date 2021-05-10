@@ -1,17 +1,18 @@
 //
 // Created by mateusberardo on 09/05/2021.
 //
-
-#include <vector>
 #include "DefinitionTable.h"
 
 void DefinitionTable::addSymbol(std::string symbol, uint16_t address) {
-    // TODO symbol already defined
+    if (symbols.find(symbol) != symbols.end())
+        throw RedefinedSymbolException(symbol);
     symbols.insert(symbols.end(), symbol);
     definitionTable.emplace(symbol, address);
 }
 
 uint16_t DefinitionTable::getSymbolAddress(std::string symbol) {
+    if (symbols.find(symbol) == symbols.end())
+        throw UndefinedSymbolException(symbol);
     return definitionTable[symbol];
 }
 

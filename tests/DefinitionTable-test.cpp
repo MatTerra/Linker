@@ -4,6 +4,7 @@
 #include "gtest/gtest.h"
 #include <DefinitionTable.h>
 #include <linkingerrors/UndefinedSymbolException.h>
+#include <linkingerrors/RedefinedSymbolException.h>
 
 
 TEST(DefinitionTable, mayInstantiateDefinitionTable){
@@ -48,4 +49,22 @@ TEST(DefinitionTable, getUndefinedSymbolShouldThrow){
     DefinitionTable definitionTable;
     ASSERT_THROW(definitionTable.getSymbolAddress("test"),
                  UndefinedSymbolException);
+}
+
+TEST(DefinitionTable, redefineSymbolShouldThrow){
+    DefinitionTable definitionTable;
+    definitionTable.addSymbol("test",2);
+    ASSERT_THROW(definitionTable.addSymbol("test",1),
+                 RedefinedSymbolException);
+}
+
+TEST(DefinitionTable, mergeWithRedefineShouldThrow){
+    DefinitionTable definitionTable;
+    definitionTable.addSymbol("test", 1);
+
+    DefinitionTable definitionTable2;
+    definitionTable2.addSymbol("test", 2);
+
+    ASSERT_THROW(definitionTable.merge(definitionTable2),
+                 RedefinedSymbolException);
 }
