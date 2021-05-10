@@ -43,7 +43,7 @@ void Module::addUseTableEntry(const std::string &line) {
     trim(symbol);
     trim(uses);
 
-    useTable.addSymbol(symbol, getNumberVector(uses));
+    useTable.addSymbol(symbol, getUnsignedNumberVector(uses));
 }
 
 void Module::addDefinitionTableEntry(const std::string &line) {
@@ -74,8 +74,25 @@ void Module::extractCode(std::string code) {
 
 }
 
-std::vector<uint16_t> Module::getNumberVector(const std::string &code) {
+std::vector<uint16_t> Module::getUnsignedNumberVector(const std::string &code) {
     std::vector<uint16_t> numbers;
+    size_t nextSpace = 0;
+    size_t lastSpace = 0;
+
+    while (nextSpace != std::string::npos) {
+        nextSpace = code.find(' ', lastSpace+1);
+
+        numbers.insert(numbers.end(),
+                       std::stoi(code.substr(lastSpace,
+                                             nextSpace-lastSpace)));
+
+        lastSpace=nextSpace;
+    }
+    return numbers;
+}
+
+std::vector<int16_t> Module::getNumberVector(const std::string &code) {
+    std::vector<int16_t> numbers;
     size_t nextSpace = 0;
     size_t lastSpace = 0;
 
@@ -101,7 +118,7 @@ std::string Module::getModuleName() {
     return name;
 }
 
-uint16_t Module::getModuleSize() {
+uint16_t Module::getModuleSize() const {
     return size;
 }
 
@@ -109,7 +126,7 @@ std::string Module::getRelocationMap() {
     return relocationMap;
 }
 
-std::vector<uint16_t> Module::getModuleCode() {
+std::vector<int16_t> Module::getModuleCode() {
     return moduleCode;
 }
 

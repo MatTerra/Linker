@@ -8,7 +8,7 @@
 std::string baseHeaders = "H: test\nH: 4\nH: 0100\n";
 std::string definitionTable = "H: D my 3\n";
 std::string useTable = "H: U use 1 3\n";
-std::string textSection = "T: 13 3 14 5\n";
+std::string textSection = "T: 13 3 14 5 -1\n";
 
 
 TEST(Module, mayInstantiateModule){
@@ -33,7 +33,7 @@ TEST(Module, mayGetRelocationMap){
 
 TEST(Module, mayGetTextSection){
     Module module(baseHeaders+textSection);
-    std::vector<uint16_t> text{13,3,14,5};
+    std::vector<int16_t> text{13,3,14,5,-1};
     ASSERT_EQ(text, module.getModuleCode());
 }
 

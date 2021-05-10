@@ -19,10 +19,10 @@ class Module {
 public:
     Module(std::string moduleContent);
     std::string getModuleName();
-    uint16_t getModuleSize();
+    uint16_t getModuleSize() const;
     std::string getRelocationMap();
 
-    std::vector<uint16_t> getModuleCode();
+    std::vector<int16_t> getModuleCode();
 
     DefinitionTable getDefinitionTable();
 
@@ -35,21 +35,23 @@ private:
     std::string name;
     uint16_t size;
     std::string relocationMap;
-    std::vector<uint16_t> moduleCode;
+    std::vector<int16_t> moduleCode;
     DefinitionTable definitionTable;
     UseTable useTable;
 
     void extractModuleName();
     void extractRelocationMap();
     void extractModuleSize();
-    std::string extractLineContent(std::string line);
+    static std::string extractLineContent(std::string line);
     void extractCode(std::string code);
-    std::vector<uint16_t> getNumberVector(const std::string &code);
+    static std::vector<int16_t> getNumberVector(const std::string &code);
     void addDefinitionTableEntry(const std::string &line);
 
     void addUseTableEntry(const std::string &line);
 
     void relocateCode(int offset);
+
+    std::vector<uint16_t> getUnsignedNumberVector(const std::string &code);
 };
 
 
